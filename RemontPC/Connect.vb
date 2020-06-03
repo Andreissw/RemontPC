@@ -47,6 +47,23 @@ Module SQLConnectionMOD
         conn.Close()
     End Sub
 
+    Public Sub LoadCombo(ByVal CB As ComboBox, cmd As String)
+        GetConnect()
+        Dim c As New SqlCommand
+        Dim da As New SqlDataAdapter
+        Dim ds As New DataTable
+
+        c = conn.CreateCommand
+        c.CommandText = cmd
+
+        da.SelectCommand = c
+        da.Fill(ds)
+
+        CB.DataSource = ds
+        CB.DisplayMember = ds.Columns(0).ToString
+        conn.Close()
+    End Sub
+
     Public Sub RunCommand(cmd As String)
         Dim c As New SqlCommand
         c = conn.CreateCommand

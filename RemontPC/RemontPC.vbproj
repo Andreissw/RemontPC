@@ -137,6 +137,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="_PSIGMA_FLATDataSet.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>_PSIGMA_FLATDataSet.xsd</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form1.resx">
@@ -166,6 +171,17 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+    <None Include="_PSIGMA_FLATDataSet.xsc">
+      <DependentUpon>_PSIGMA_FLATDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="_PSIGMA_FLATDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>_PSIGMA_FLATDataSet.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="_PSIGMA_FLATDataSet.xss">
+      <DependentUpon>_PSIGMA_FLATDataSet.xsd</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="RemontPC_TemporaryKey.pfx" />

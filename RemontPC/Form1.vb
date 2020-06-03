@@ -10,6 +10,7 @@ Public Class Form1
     Dim SQL, RFID_X, AppName As String
     Dim Check As Boolean = False
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
         UserName.Text = ""
         Lines() 'Получает список линий в комбобокс
         errorcodeList()
@@ -390,17 +391,19 @@ Public Class Form1
     End Sub
 
     Sub posit2()
-        SQL = "SELECT  distinct(positionName)  FROM [PSIGMA.FLAT].[dbo].[TRC_RepairPosition]"
-        LoadGridFromDB(PosGrid, SQL)
-        ComboBoxGrid(PosGrid, PositionCB, 0)
+        LoadCombo(PositionCB, "SELECT  distinct(positionName)  FROM [PSIGMA.FLAT].[dbo].[TRC_RepairPosition]")
+        'SQL = "SELECT  distinct(positionName)  FROM [PSIGMA.FLAT].[dbo].[TRC_RepairPosition]"
+        'LoadGridFromDB(PosGrid, SQL)
+        ''ComboBoxGrid(PosGrid, PositionCB, 0)
     End Sub
 
 
 
     Sub ComboBoxGrid(grid As DataGridView, cmd As ComboBox, numb As Integer) 'функция - перетаскивает информацию с грида в комбобокс, с помощью цикла
-        For J = 0 To grid.Rows.Count - 2           'Выводим нужные данные, и убираем не нужные
-            cmd.Items.Add(grid.Rows(J).Cells(numb).Value)
-        Next
+        'For J = 0 To grid.Rows.Count - 2           'Выводим нужные данные, и убираем не нужные
+        '    cmd.Items.Add(grid.Rows(J).Cells(numb).Value)
+        'Next
+
     End Sub
 
     Dim check3 As Boolean = True
@@ -497,26 +500,26 @@ Public Class Form1
 
     Sub leavecombo(combo As ComboBox)
 
-        Dim checking As Boolean = False
-        If combo.Text = "" Then
-            combo.BackColor = Color.White
-        Else
+        'Dim checking As Boolean = False
+        'If combo.Text = "" Then
+        '    combo.BackColor = Color.White
+        'Else
 
-            For i = 0 To combo.Items.Count - 1
-                If combo.Items.Item(i) = combo.Text Then
-                    checking = True
-                    Exit For
-                End If
-            Next
+        '    For i = 0 To combo.Items.Count - 1
+        '        If combo.Items.Item(i) = combo.Text Then
+        '            checking = True
+        '            Exit For
+        '        End If
+        '    Next
 
-            If checking = False Then
-                combo.Text = ""
-                combo.BackColor = Color.LightCoral
-            Else
-                checking = True
-                combo.BackColor = Color.MediumSeaGreen
-            End If
-        End If
+        '    If checking = False Then
+        '        combo.Text = ""
+        '        combo.BackColor = Color.LightCoral
+        '    Else
+        '        checking = True
+        '        combo.BackColor = Color.MediumSeaGreen
+        '    End If
+        'End If
     End Sub
 
 

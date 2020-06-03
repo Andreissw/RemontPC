@@ -31,6 +31,7 @@ Partial Class Form1
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Display = New System.Windows.Forms.GroupBox()
         Me.DecsriptionText = New System.Windows.Forms.TextBox()
+        Me.Button3 = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.PosLB = New System.Windows.Forms.Label()
         Me.NoOk = New System.Windows.Forms.Button()
@@ -75,7 +76,9 @@ Partial Class Form1
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.BTRep = New System.Windows.Forms.Button()
         Me.Button5 = New System.Windows.Forms.Button()
-        Me.Button3 = New System.Windows.Forms.Button()
+        Me._PSIGMA_FLATDataSet = New RemontPC._PSIGMA_FLATDataSet()
+        Me.TRCRepairPositionBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.TRC_RepairPositionTableAdapter = New RemontPC._PSIGMA_FLATDataSetTableAdapters.TRC_RepairPositionTableAdapter()
         Me.Log_in.SuspendLayout()
         Me.Display.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -84,6 +87,8 @@ Partial Class Form1
         CType(Me.ErrorGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DefectCodeGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RepCode, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me._PSIGMA_FLATDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.TRCRepairPositionBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Ychastok_TB
@@ -192,6 +197,25 @@ Partial Class Form1
         Me.DecsriptionText.Name = "DecsriptionText"
         Me.DecsriptionText.Size = New System.Drawing.Size(221, 81)
         Me.DecsriptionText.TabIndex = 7
+        '
+        'Button3
+        '
+        Me.Button3.BackColor = System.Drawing.Color.Transparent
+        Me.Button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.Button3.FlatAppearance.BorderColor = System.Drawing.Color.Black
+        Me.Button3.FlatAppearance.BorderSize = 0
+        Me.Button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent
+        Me.Button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button3.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+        Me.Button3.Image = Global.RemontPC.My.Resources.Resources.Plus1
+        Me.Button3.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.Button3.Location = New System.Drawing.Point(666, 36)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(38, 45)
+        Me.Button3.TabIndex = 7
+        Me.Button3.TabStop = False
+        Me.Button3.TextAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.Button3.UseVisualStyleBackColor = False
         '
         'Button1
         '
@@ -703,24 +727,19 @@ Partial Class Form1
         Me.Button5.UseVisualStyleBackColor = False
         Me.Button5.Visible = False
         '
-        'Button3
+        '_PSIGMA_FLATDataSet
         '
-        Me.Button3.BackColor = System.Drawing.Color.Transparent
-        Me.Button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.Button3.FlatAppearance.BorderColor = System.Drawing.Color.Black
-        Me.Button3.FlatAppearance.BorderSize = 0
-        Me.Button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent
-        Me.Button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.Button3.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
-        Me.Button3.Image = Global.RemontPC.My.Resources.Resources.Plus1
-        Me.Button3.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.Button3.Location = New System.Drawing.Point(666, 36)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(38, 45)
-        Me.Button3.TabIndex = 7
-        Me.Button3.TabStop = False
-        Me.Button3.TextAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.Button3.UseVisualStyleBackColor = False
+        Me._PSIGMA_FLATDataSet.DataSetName = "_PSIGMA_FLATDataSet"
+        Me._PSIGMA_FLATDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
+        '
+        'TRCRepairPositionBindingSource
+        '
+        Me.TRCRepairPositionBindingSource.DataMember = "TRC_RepairPosition"
+        Me.TRCRepairPositionBindingSource.DataSource = Me._PSIGMA_FLATDataSet
+        '
+        'TRC_RepairPositionTableAdapter
+        '
+        Me.TRC_RepairPositionTableAdapter.ClearBeforeFill = True
         '
         'Form1
         '
@@ -760,6 +779,8 @@ Partial Class Form1
         CType(Me.ErrorGrid, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DefectCodeGrid, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.RepCode, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me._PSIGMA_FLATDataSet, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.TRCRepairPositionBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -818,4 +839,7 @@ Partial Class Form1
     Friend WithEvents Label8 As Label
     Friend WithEvents Timer1 As Timer
     Friend WithEvents BTRep As Button
+    Friend WithEvents _PSIGMA_FLATDataSet As _PSIGMA_FLATDataSet
+    Friend WithEvents TRCRepairPositionBindingSource As BindingSource
+    Friend WithEvents TRC_RepairPositionTableAdapter As _PSIGMA_FLATDataSetTableAdapters.TRC_RepairPositionTableAdapter
 End Class
