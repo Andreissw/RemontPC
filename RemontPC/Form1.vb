@@ -321,7 +321,7 @@ Public Class Form1
         Display.Enabled = False
         PosLB.Visible = False
         PosLB.Text = ""
-        PositionCB.Items.Clear()
+        'PositionCB.DataSource = vbNull
         PositionCB.Text = ""
         PositionList.Items.Clear()
         DecsriptionText.Clear()
@@ -391,7 +391,7 @@ Public Class Form1
     End Sub
 
     Sub posit2()
-        LoadCombo(PositionCB, "SELECT  distinct(positionName)  FROM [PSIGMA.FLAT].[dbo].[TRC_RepairPosition]")
+        LoadCombo(PositionCB, "SELECT  distinct(positionName)  FROM [PSIGMA.FLAT].[dbo].[TRC_RepairPosition] where PositionName not in ('','-')  order by PositionName")
         'SQL = "SELECT  distinct(positionName)  FROM [PSIGMA.FLAT].[dbo].[TRC_RepairPosition]"
         'LoadGridFromDB(PosGrid, SQL)
         ''ComboBoxGrid(PosGrid, PositionCB, 0)
@@ -400,9 +400,9 @@ Public Class Form1
 
 
     Sub ComboBoxGrid(grid As DataGridView, cmd As ComboBox, numb As Integer) 'функция - перетаскивает информацию с грида в комбобокс, с помощью цикла
-        'For J = 0 To grid.Rows.Count - 2           'Выводим нужные данные, и убираем не нужные
-        '    cmd.Items.Add(grid.Rows(J).Cells(numb).Value)
-        'Next
+        For J = 0 To grid.Rows.Count - 2           'Выводим нужные данные, и убираем не нужные
+            cmd.Items.Add(grid.Rows(J).Cells(numb).Value)
+        Next
 
     End Sub
 
