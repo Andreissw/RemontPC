@@ -79,6 +79,7 @@ Partial Class Form1
         Me._PSIGMA_FLATDataSet = New RemontPC._PSIGMA_FLATDataSet()
         Me.TRCRepairPositionBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.TRC_RepairPositionTableAdapter = New RemontPC._PSIGMA_FLATDataSetTableAdapters.TRC_RepairPositionTableAdapter()
+        Me.Label15 = New System.Windows.Forms.Label()
         Me.Log_in.SuspendLayout()
         Me.Display.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -741,12 +742,22 @@ Partial Class Form1
         '
         Me.TRC_RepairPositionTableAdapter.ClearBeforeFill = True
         '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(3, -4)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(41, 13)
+        Me.Label15.TabIndex = 21
+        Me.Label15.Text = "_v_last"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.ScrollBar
         Me.ClientSize = New System.Drawing.Size(1179, 741)
+        Me.Controls.Add(Me.Label15)
         Me.Controls.Add(Me.BTRep)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.Button5)
@@ -842,4 +853,5 @@ Partial Class Form1
     Friend WithEvents _PSIGMA_FLATDataSet As _PSIGMA_FLATDataSet
     Friend WithEvents TRCRepairPositionBindingSource As BindingSource
     Friend WithEvents TRC_RepairPositionTableAdapter As _PSIGMA_FLATDataSetTableAdapters.TRC_RepairPositionTableAdapter
+    Friend WithEvents Label15 As Label
 End Class

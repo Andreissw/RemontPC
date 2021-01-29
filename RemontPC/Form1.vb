@@ -81,6 +81,12 @@ Public Class Form1
         If e.KeyCode = Keys.Enter Then
             checkdissLog()
 
+            If Serial_TB.Text = "INS00" Then
+                AQVMain() ' Если barcode не приемника 
+                ErrorCB.Focus()
+                Return
+            End If
+
             If Serial_TB.Text.Length < 5 Then ' не принимает меньше 5 символов
                 Serial_TB.Clear()
                 Exit Sub
@@ -228,7 +234,7 @@ Public Class Form1
     End Sub
 
     Sub errorcodeList()
-        SQL = "SELECT TOP (1000) concat(Category,code) FROM [FAS].[dbo].[M_ErrorCode]"
+        SQL = "SELECT distinct   [ErrorCode]  FROM [FAS].[dbo].[FAS_ErrorCode] order by [ErrorCode] desc "
         LoadGridFromDB(ErrorGrid, SQL)
         ComboBoxGrid(ErrorGrid, ErrorCB, 0)
     End Sub
@@ -362,6 +368,22 @@ Public Class Form1
         End If
     End Sub
 
+    Sub AQVMain()
+        indef = "1"
+
+        LOTLabel.Text = "AQV"
+        ModelLabel.Text = "Корпус планшета"
+        models = ModelLabel.Text
+            ModelLabel.Visible = True 'Делает надпись модель видимой
+            LOT.Visible = True 'Делает надпись ЛОТ видимой
+            LOTLabel.Visible = True
+            Button5.Visible = True
+            OkBar() ' Функция настройки дисплея
+            posit2()
+        LabelChecking.Visible = False
+
+    End Sub
+
     Sub IndefenitModel()   'Определяет модель CADEN
         indef = "2"
         CheckBarcode()
@@ -385,9 +407,10 @@ Public Class Form1
     End Sub
 
     Sub posit() 'Определение позиций Добавление позиций относительно МОДЕЛИ
-        SQL = "SELECT distinct(positionName)  FROM [PSIGMA.FLAT].[dbo].[TRC_RepairPosition]  where ModelName = '" & ModelLabel.Text & "' "
-        LoadGridFromDB(PosGrid, SQL)
-        ComboBoxGrid(PosGrid, PositionCB, 0)
+        'SQL = "SELECT distinct(positionName)  FROM [PSIGMA.FLAT].[dbo].[TRC_RepairPosition]  where ModelName = '" & ModelLabel.Text & "' "
+        'LoadGridFromDB(PosGrid, SQL)
+        'ComboBoxGrid(PosGrid, PositionCB, 0)
+        LoadCombo(PositionCB, "SELECT distinct(positionName)  FROM [PSIGMA.FLAT].[dbo].[TRC_RepairPosition]  where ModelName = '" & ModelLabel.Text & "' ")
     End Sub
 
     Sub posit2()
@@ -540,7 +563,7 @@ Public Class Form1
         Serial_TB.Clear()
     End Sub
 
-    Private Sub NoOk_Click(sender As Object, e As EventArgs) Handles NoOk.Click 'КНОПКА СПСАНИЕ БРАКА
+    Private Sub NoOk_Click(sender As Object, e As EventArgs) Handles NoOk.Click 'КНОПКА СПИСАНИЕ БРАКА
         StageOne()
 
     End Sub
@@ -551,6 +574,8 @@ Public Class Form1
 	                VALUES
 	                ('" & Serial_TB.Text & "',CURRENT_TIMESTAMP,'" & UserName.Text & "','" & Ychastok_TB.Text & "','" & stationid & "','','Y','3','','" & DecsriptionText.Text & "',1, '" & modelid & "')"
         SelectString(SQL)
+
+        Ct_StepResult(2)
         clear()
     End Sub
 
@@ -585,19 +610,74 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub RepairBT_Click(sender As Object, e As EventArgs) Handles RepairBT.Click 'Кнопка ремонта
-        If DefectCodeCB.Text = "" Or RepairCodeCB.Text = "" Or GenerateCodeCB.Text = "" Or PositionList.Items.Count = 0 Then
+
+    Function CheckOne() As Boolean
+        If DefectCodeCB.Text = "" Or RepairCodeCB.Text = "" Or GenerateCodeCB.Text = "" Then
             checktextboxRep()
-        Else
-            For i = 0 To PositionList.Items.Count - 1
-                SQL = " Use fas insert into [FAS].[dbo].[M_Repair_Table] (Barcode,RapairDate,Repairer, [Repair location],Repair_Station_ID,Position,RepairCode,DefectCode,GeneratorCode,[Description],isUnitOK,[ErrorCode],Modelid)
+            Return True
+        End If
+        Return False
+    End Function
+
+    Function CheckTwo() As Boolean
+        If RepairCodeCB.Text = "H" Then
+            Return True
+        End If
+        Return False
+    End Function
+
+    Sub AddRep(bool As Boolean)
+
+        If bool And PositionList.Items.Count = 0 Then
+            PositionList.Items.Add("")
+        End If
+
+        If PositionList.Items.Count = 0 Then
+            PosLB.Text = "Добавьте позицию"
+            PosLB.Visible = True
+            Return
+        End If
+
+        For i = 0 To PositionList.Items.Count - 1
+            SQL = " Use fas insert into [FAS].[dbo].[M_Repair_Table] (Barcode,RapairDate,Repairer, [Repair location],Repair_Station_ID,Position,RepairCode,DefectCode,GeneratorCode,[Description],isUnitOK,[ErrorCode],Modelid)
 	                VALUES
 	                ('" & Serial_TB.Text & "',CURRENT_TIMESTAMP,'" & UserName.Text & "','" & Ychastok_TB.Text & "','" & stationid & "','" & PositionList.Items.Item(i) & "','" & RepairCodeCB.Text & "','" & DefectCodeCB.Text & "','" & GenerateCodeCB.Text & "','" & DecsriptionText.Text & "',1,'" & ErrorCB.Text & "','" & modelid & "' )"
-                SelectString(SQL)
+            SelectString(SQL)
+        Next
 
-            Next
-            clear()
+        Ct_StepResult(2)
+
+        clear()
+    End Sub
+
+
+    Sub Ct_StepResult(Result As String)
+        SQL = "SELECT  [IDLaser]  FROM [SMDCOMPONETS].[dbo].[LazerBase]   where Content = '" & Serial_TB.Text & "'"
+        Dim IDLaser As String = SelectString(SQL)
+        If IDLaser = "" Then
+            Return
         End If
+
+        SelectString("use FAS update [FAS].[dbo].[Ct_StepResult]  set StepID = 4, TestResult = '" & Result & "'  where PCBID = '" & IDLaser & "'")
+        SelectString("use fas  insert into [FAS].[dbo].[Ct_OperLog]  (PCBID,LOTID,StepID,TestResultID,StepDate,Descriptions) values ('" & IDLaser & "','20063','4','" & Result & "',CURRENT_TIMESTAMP,'" & UserName.Text & "' )")
+    End Sub
+
+
+    'Sub AddRepH()
+    '    SQL = " Use fas insert into [FAS].[dbo].[M_Repair_Table] (Barcode,RapairDate,Repairer, [Repair location],Repair_Station_ID,RepairCode,DefectCode,GeneratorCode,[Description],isUnitOK,[ErrorCode],Modelid)
+    '             VALUES
+    '             ('" & Serial_TB.Text & "',CURRENT_TIMESTAMP,'" & UserName.Text & "','" & Ychastok_TB.Text & "','" & stationid & "','" & RepairCodeCB.Text & "','" & DefectCodeCB.Text & "','" & GenerateCodeCB.Text & "','" & DecsriptionText.Text & "',1,'" & ErrorCB.Text & "','" & modelid & "' )"
+    '    SelectString(SQL)
+    'End Sub
+
+    Private Sub RepairBT_Click(sender As Object, e As EventArgs) Handles RepairBT.Click 'Кнопка ремонта
+
+        If CheckOne() Then
+            Return
+        End If
+
+        AddRep(CheckTwo())
+
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
@@ -670,10 +750,24 @@ Public Class Form1
         If DefectCodeCB.Text = "" Or RepairCodeCB.Text = "" Then
             checktextbox()
         Else
-            SQL = " Use fas insert into [FAS].[dbo].[M_Repair_Table] (Barcode,RapairDate,Repairer, [Repair location],Repair_Station_ID,Position,RepairCode,DefectCode,GeneratorCode,[Description],isUnitOK,[ErrorCode],Modelid)
+            If PositionList.Items.Count = 0 Then
+                SQL = " Use fas insert into [FAS].[dbo].[M_Repair_Table] (Barcode,RapairDate,Repairer, [Repair location],Repair_Station_ID,RepairCode,DefectCode,GeneratorCode,[Description],isUnitOK,[ErrorCode],Modelid)
 	                VALUES
-	                ('" & Serial_TB.Text & "',CURRENT_TIMESTAMP,'" & UserName.Text & "','" & Ychastok_TB.Text & "','" & stationid & "','','" & RepairCodeCB.Text & "','" & DefectCodeCB.Text & "','" & GenerateCodeCB.Text & "','" & DecsriptionText.Text & "',0,'" & ErrorCB.Text & "','" & modelid & "')"
-            SelectString(SQL)
+	                ('" & Serial_TB.Text & "',CURRENT_TIMESTAMP,'" & UserName.Text & "','" & Ychastok_TB.Text & "','" & stationid & "','" & RepairCodeCB.Text & "','" & DefectCodeCB.Text & "','" & GenerateCodeCB.Text & "','" & DecsriptionText.Text & "',0,'" & ErrorCB.Text & "','" & modelid & "')"
+                SelectString(SQL)
+                clear()
+                Return
+            End If
+
+            For i = 0 To PositionList.Items.Count - 1
+                SQL = " Use fas insert into [FAS].[dbo].[M_Repair_Table] (Barcode,RapairDate,Repairer, [Repair location],Repair_Station_ID,Position,RepairCode,DefectCode,GeneratorCode,[Description],isUnitOK,[ErrorCode],Modelid)
+	                VALUES
+	                ('" & Serial_TB.Text & "',CURRENT_TIMESTAMP,'" & UserName.Text & "','" & Ychastok_TB.Text & "','" & stationid & "','" & PositionList.Items.Item(i) & "','" & RepairCodeCB.Text & "','" & DefectCodeCB.Text & "','" & GenerateCodeCB.Text & "','" & DecsriptionText.Text & "',0,'" & ErrorCB.Text & "','" & modelid & "')"
+                SelectString(SQL)
+            Next
+
+            Ct_StepResult(3)
+
 
             clear()
         End If
@@ -684,10 +778,23 @@ Public Class Form1
 
     Dim DateReg, DateRem As String
     Sub CheckBarcode() 'Проверка номера в Таблице UNIT и таблицы ремонта
-        SQL = "Use [PSIGMA.FLAT]  SELECT RegDate  FROM [PSIGMA.FLAT].[dbo].[TRC_Unit]  where Barcode = '" & Serial_TB.Text & "'"
+        SQL = "use SMDCOMPONETS SELECT top 1 PCBnumber  FROM [SMDCOMPONETS].[dbo].[AOIresult]  where  PCBnumber = '" & Serial_TB.Text & "'"
         DateReg = SelectString(SQL)
         If DateReg = Nothing Then
-            Check = False
+
+            SQL = "use SMDCOMPONETS SELECT top 1 Content  FROM [SMDCOMPONETS].[dbo].[LazerBase]  where  Content = '" & Serial_TB.Text & "'"
+            DateReg = SelectString(SQL)
+
+            If DateReg = Nothing Then
+                SQL = "SELECT top (1) Barcode  FROM [PSIGMA.FLAT].[dbo].[TRC_Unit]  where Barcode = '" & Serial_TB.Text & "'"
+                DateReg = SelectString(SQL)
+            End If
+
+
+            If DateReg = Nothing Then
+                Check = False
+                Return
+            End If
         Else
             Check = True
         End If
@@ -695,12 +802,20 @@ Public Class Form1
     End Sub
     Dim Errorcode As String
     Sub checkdissLog() 'проверяет наличие номера в таблице  оказов
-        SQL = "Use fas SELECT TOP (1) concat(er.Category ,er.Code )  FROM [FAS].[dbo].[M_Disassembly]  left join [PSIGMA.FLAT].dbo.TRC_Unit as 
-                id on M_Disassembly.PCBID = id.id
-                left join M_ErrorCode as er on M_Disassembly.ErrorCodeID = er.ID
-                where barcode = '" & Serial_TB.Text & "'"
+        'SQL = "Use fas SELECT TOP (1) concat(er.Category ,er.Code )  FROM [FAS].[dbo].[FAS_Disassembly]  left join [PSIGMA.FLAT].dbo.TRC_Unit as 
+        '        id on FAS_Disassembly.PCBID = id.id
+        '        left join FAS_ErrorCode as er on FAS_Disassembly.ErrorCodeID = er.ID
+        '        where barcode = '" & Serial_TB.Text & "'"
+
+        SQL = " Use fas SELECT TOP (1) ErrorCode 
+				   FROM [FAS].[dbo].[FAS_Disassembly]  
+				   left join SMDCOMPONETS.dbo.LazerBase as  id on FAS_Disassembly.PCBID = id.IDLaser
+                left join FAS_ErrorCode as er on FAS_Disassembly.ErrorCodeID = er.ErrorCodeID
+                where Content = '" & Serial_TB.Text & "'"
+
         If SelectString(SQL) = "" Then
-            SQL = "use SMDCOMPONETS SELECT concat(err.Category ,err.Code )   FROM [SMDCOMPONETS].[dbo].[LazerBase] as LB left join FAS.dbo.Ct_OperLog as 
+            SQL = "use SMDCOMPONETS SELECT concat(err.Category ,err.Code )  
+                FROM [SMDCOMPONETS].[dbo].[LazerBase] as LB left join FAS.dbo.Ct_OperLog as 
                     logs on LB.IDLaser = logs.PCBID
                  left join fas.dbo.FAS_ErrorCode as err on logs.ErrorCodeID = err.ErrorCodeID    where  Content = '" & Serial_TB.Text & "'   
                         and err.ErrorCodeID is not null

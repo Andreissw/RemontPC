@@ -10,11 +10,44 @@ Public Class Info
         Try
             Запрос()
             THT()
+            TesterSMT()
+            AOI()
         Catch ex As Exception
 
         End Try
     End Sub
 
+
+    Sub TesterSMT()
+        Dim bar As String = Form1.Serial_TB.Text
+        Dim sql As String
+        sql = "SELECT[TRID]
+      ,[PASS]
+      ,[FAIL]
+      ,[DateReg] 'дата сканирования'      
+      ,[ErrorCodeID]
+      ,[Description]
+     
+  FROM [FAS].[dbo].[Tester_Caden]
+
+  where trid = '" & bar & "'"
+        LoadGridFromDB(DataGridView1, sql)
+
+
+    End Sub
+
+
+    Sub AOI()
+        Dim sql As String
+        Dim bar As String = Form1.Serial_TB.Text
+        sql = "   use SMDCOMPONETS SELECT inspectionDate 'Дата AOI', User_INSPect 'Ремонтник', InspectResult 'Результат АОИ', UserInspectionResult'Результат проверки',CIRNAME 'Позиция'
+  FROM [SMDCOMPONETS].[dbo].[AOIresult]
+  where PCBnumber = '" & bar & "'
+  order by inspectionDate desc "
+        LoadGridFromDB(DataGridView2, sql)
+
+
+    End Sub
 
     Sub THT()
         Dim bar As String = Form1.Serial_TB.Text
