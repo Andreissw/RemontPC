@@ -434,7 +434,7 @@ Public Class Form1
     Dim Check2 As Boolean = False
     Sub CheckPosition()
         If indef = "2" Then
-            SQL = "SELECT TOP (1000) [ID]      ,[ModelName]      ,[PositionName]  FROM [PSIGMA.FLAT].[dbo].[TRC_RepairPosition]  where PositionName = '" & PositionCB.Text & "' and modelname =  '" & ModelLabel.Text & "'"
+            SQL = "SELECT TOP (1000) [ID]      ,[ModelName]      ,[PositionName]  FROM [PSIGMA.FLAT].[dbo].[TRC_RepairPosition]  where PositionName = '" & PositionCB.Text & "'"
             If SelectString(SQL) = Nothing Then
                 Check2 = False
             Else
@@ -564,7 +564,7 @@ Public Class Form1
     End Sub
 
     Private Sub NoOk_Click(sender As Object, e As EventArgs) Handles NoOk.Click 'КНОПКА СПИСАНИЕ БРАКА
-        StageOne()
+        StageOne(3)
 
     End Sub
 
@@ -658,8 +658,20 @@ Public Class Form1
             Return
         End If
 
+        Dim LotID = SelectString("use FAS
+                            select  st.LOTID
+                            from Ct_OperLog  as st
+                            where st.PCBID = (select IDLaser from SMDCOMPONETS.dbo.LazerBase where Content = '" & Serial_TB.Text & "')")
+
+        If LotID = "" Then
+            SelectString("use FAS update [FAS].[dbo].[Ct_StepResult]  set StepID = 4, TestResult = '" & Result & "'  where PCBID = '" & IDLaser & "'")
+            SelectString("use fas  insert into [FAS].[dbo].[Ct_OperLog]  (PCBID,StepID,TestResultID,StepDate,Descriptions) values ('" & IDLaser & "', '4','" & Result & "',CURRENT_TIMESTAMP,'" & UserName.Text & "' )")
+            Return
+        End If
+
+
         SelectString("use FAS update [FAS].[dbo].[Ct_StepResult]  set StepID = 4, TestResult = '" & Result & "'  where PCBID = '" & IDLaser & "'")
-        SelectString("use fas  insert into [FAS].[dbo].[Ct_OperLog]  (PCBID,LOTID,StepID,TestResultID,StepDate,Descriptions) values ('" & IDLaser & "','20063','4','" & Result & "',CURRENT_TIMESTAMP,'" & UserName.Text & "' )")
+        SelectString("use fas  insert into [FAS].[dbo].[Ct_OperLog]  (PCBID,StepID,TestResultID,StepDate,Descriptions,LotID) values ('" & IDLaser & "', '4','" & Result & "',CURRENT_TIMESTAMP,'" & UserName.Text & "','" & LotID & "' )")
     End Sub
 
 
@@ -742,11 +754,12 @@ Public Class Form1
         Rems.Show()
     End Sub
 
+    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
+        StageOne(4)
 
+    End Sub
 
-
-
-    Sub StageOne() 'функция списание брака 
+    Sub StageOne(TestReuslt As Integer) 'функция списание брака 
         If DefectCodeCB.Text = "" Or RepairCodeCB.Text = "" Then
             checktextbox()
         Else
@@ -755,6 +768,7 @@ Public Class Form1
 	                VALUES
 	                ('" & Serial_TB.Text & "',CURRENT_TIMESTAMP,'" & UserName.Text & "','" & Ychastok_TB.Text & "','" & stationid & "','" & RepairCodeCB.Text & "','" & DefectCodeCB.Text & "','" & GenerateCodeCB.Text & "','" & DecsriptionText.Text & "',0,'" & ErrorCB.Text & "','" & modelid & "')"
                 SelectString(SQL)
+                Ct_StepResult(TestReuslt)
                 clear()
                 Return
             End If
@@ -764,9 +778,10 @@ Public Class Form1
 	                VALUES
 	                ('" & Serial_TB.Text & "',CURRENT_TIMESTAMP,'" & UserName.Text & "','" & Ychastok_TB.Text & "','" & stationid & "','" & PositionList.Items.Item(i) & "','" & RepairCodeCB.Text & "','" & DefectCodeCB.Text & "','" & GenerateCodeCB.Text & "','" & DecsriptionText.Text & "',0,'" & ErrorCB.Text & "','" & modelid & "')"
                 SelectString(SQL)
+                Ct_StepResult(TestReuslt)
             Next
 
-            Ct_StepResult(3)
+
 
 
             clear()
@@ -821,6 +836,12 @@ Public Class Form1
                         and err.ErrorCodeID is not null
                   order by StepDate desc "
         End If
+
+        DescriptionError.Text = SelectString("use fas SELECT       [Descriptions]      
+                                                  FROM [FAS].[dbo].[Ct_OperLog] op
+                                                  left join SMDCOMPONETS.dbo.LazerBase l on op.PCBID = l.IDLaser
+                                                  where Content = '" & Serial_TB.Text & "'   and Descriptions is not null")
+
 
         Errorcode = SelectString(SQL)
     End Sub

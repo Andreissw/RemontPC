@@ -30,6 +30,8 @@ Partial Class Form1
         Me.Log_in = New System.Windows.Forms.GroupBox()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Display = New System.Windows.Forms.GroupBox()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.DescriptionError = New System.Windows.Forms.TextBox()
         Me.DecsriptionText = New System.Windows.Forms.TextBox()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
@@ -80,6 +82,7 @@ Partial Class Form1
         Me.TRCRepairPositionBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.TRC_RepairPositionTableAdapter = New RemontPC._PSIGMA_FLATDataSetTableAdapters.TRC_RepairPositionTableAdapter()
         Me.Label15 = New System.Windows.Forms.Label()
+        Me.Button6 = New System.Windows.Forms.Button()
         Me.Log_in.SuspendLayout()
         Me.Display.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -165,6 +168,9 @@ Partial Class Form1
         'Display
         '
         Me.Display.BackColor = System.Drawing.Color.Silver
+        Me.Display.Controls.Add(Me.Button6)
+        Me.Display.Controls.Add(Me.Label16)
+        Me.Display.Controls.Add(Me.DescriptionError)
         Me.Display.Controls.Add(Me.DecsriptionText)
         Me.Display.Controls.Add(Me.Button3)
         Me.Display.Controls.Add(Me.Button1)
@@ -187,9 +193,30 @@ Partial Class Form1
         Me.Display.Enabled = False
         Me.Display.Location = New System.Drawing.Point(298, 230)
         Me.Display.Name = "Display"
-        Me.Display.Size = New System.Drawing.Size(710, 312)
+        Me.Display.Size = New System.Drawing.Size(737, 371)
         Me.Display.TabIndex = 4
         Me.Display.TabStop = False
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+        Me.Label16.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.Label16.Location = New System.Drawing.Point(11, 221)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(180, 18)
+        Me.Label16.TabIndex = 9
+        Me.Label16.Text = "Доп. отказы на плате"
+        '
+        'DescriptionError
+        '
+        Me.DescriptionError.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+        Me.DescriptionError.Location = New System.Drawing.Point(11, 242)
+        Me.DescriptionError.Multiline = True
+        Me.DescriptionError.Name = "DescriptionError"
+        Me.DescriptionError.ReadOnly = True
+        Me.DescriptionError.Size = New System.Drawing.Size(267, 81)
+        Me.DescriptionError.TabIndex = 8
         '
         'DecsriptionText
         '
@@ -255,9 +282,9 @@ Partial Class Form1
         Me.NoOk.FlatAppearance.BorderSize = 2
         Me.NoOk.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.NoOk.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
-        Me.NoOk.Location = New System.Drawing.Point(522, 268)
+        Me.NoOk.Location = New System.Drawing.Point(425, 329)
         Me.NoOk.Name = "NoOk"
-        Me.NoOk.Size = New System.Drawing.Size(180, 36)
+        Me.NoOk.Size = New System.Drawing.Size(141, 36)
         Me.NoOk.TabIndex = 4
         Me.NoOk.TabStop = False
         Me.NoOk.Text = "UNIT IS NOT OK"
@@ -270,9 +297,9 @@ Partial Class Form1
         Me.FalseFaultBT.FlatAppearance.BorderSize = 2
         Me.FalseFaultBT.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.FalseFaultBT.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
-        Me.FalseFaultBT.Location = New System.Drawing.Point(249, 268)
+        Me.FalseFaultBT.Location = New System.Drawing.Point(250, 329)
         Me.FalseFaultBT.Name = "FalseFaultBT"
-        Me.FalseFaultBT.Size = New System.Drawing.Size(267, 36)
+        Me.FalseFaultBT.Size = New System.Drawing.Size(169, 36)
         Me.FalseFaultBT.TabIndex = 4
         Me.FalseFaultBT.TabStop = False
         Me.FalseFaultBT.Text = " FALSEFAULT"
@@ -285,7 +312,7 @@ Partial Class Form1
         Me.RepairBT.FlatAppearance.BorderSize = 2
         Me.RepairBT.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.RepairBT.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
-        Me.RepairBT.Location = New System.Drawing.Point(9, 268)
+        Me.RepairBT.Location = New System.Drawing.Point(10, 329)
         Me.RepairBT.Name = "RepairBT"
         Me.RepairBT.Size = New System.Drawing.Size(236, 36)
         Me.RepairBT.TabIndex = 4
@@ -751,6 +778,21 @@ Partial Class Form1
         Me.Label15.TabIndex = 21
         Me.Label15.Text = "_v_last"
         '
+        'Button6
+        '
+        Me.Button6.BackColor = System.Drawing.Color.Orange
+        Me.Button6.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.Button6.FlatAppearance.BorderSize = 2
+        Me.Button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button6.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+        Me.Button6.Location = New System.Drawing.Point(569, 329)
+        Me.Button6.Name = "Button6"
+        Me.Button6.Size = New System.Drawing.Size(162, 36)
+        Me.Button6.TabIndex = 10
+        Me.Button6.TabStop = False
+        Me.Button6.Text = "Брак на списание"
+        Me.Button6.UseVisualStyleBackColor = False
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -854,4 +896,7 @@ Partial Class Form1
     Friend WithEvents TRCRepairPositionBindingSource As BindingSource
     Friend WithEvents TRC_RepairPositionTableAdapter As _PSIGMA_FLATDataSetTableAdapters.TRC_RepairPositionTableAdapter
     Friend WithEvents Label15 As Label
+    Friend WithEvents Label16 As Label
+    Friend WithEvents DescriptionError As TextBox
+    Friend WithEvents Button6 As Button
 End Class

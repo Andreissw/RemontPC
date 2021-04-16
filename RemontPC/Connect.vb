@@ -86,8 +86,13 @@ Module SQLConnectionMOD
 
         r = c.ExecuteReader
         If r.Read Then
-            k = r.Item(0)
-            r.Close()
+            If IsDBNull(r.Item(0)) Then
+                k = ""
+                r.Close()
+            Else
+                k = r.Item(0)
+                r.Close()
+            End If
         End If
 
         Return k
